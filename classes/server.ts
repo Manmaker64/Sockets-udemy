@@ -4,6 +4,7 @@ import socketIO from 'socket.io';
 import http from 'http';
 
 import * as socket from '../sockets/socket';
+import { configurarUsuario } from '../sockets/socket';
 
 export default class Server {
     private static _instance: Server;
@@ -31,7 +32,13 @@ export default class Server {
     private escucharSockets() {
         console.log('Sockets ========> \x1b[32m%s\x1b[0m', 'Escuchando conexiones...');
         this.io.on('connection', cliente => {
-            console.log('Cliente ========> \x1b[32m%s\x1b[0m', 'Conectado');
+            console.log('Id Cliente =====> \x1b[32m%s\x1b[0m', cliente.id );
+
+            // Conectar cliente
+            socket.conectarCliente( cliente );
+
+            // Configurar usuario
+            socket.configurarUsuario( cliente, this.io );
 
             // Mensajes
             socket.mensaje( cliente, this.io );
